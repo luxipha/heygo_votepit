@@ -1,7 +1,6 @@
 import type { ElementType, ReactNode } from 'react'
 import { Avatar } from '../ds/Avatar'
 import { TopBar } from '../ds/TopBar'
-import { cx } from '../lib/cx'
 import { Button } from './Button'
 
 // Same hex paths as BrandBackdrop.tsx — kept in sync.
@@ -182,52 +181,17 @@ export function VotepitLogo({
   /** Landing-sized wordmark (auth header). */
   size?: 'default' | 'lg'
 }) {
-  const editionLabel = (edition === 'cloud' ? 'CLOUD' : 'COMMUNITY') + (demo ? ' · DEMO' : '')
   return (
     <a
       href={href}
-      className="ds-topbar__brand flex items-center gap-1.5 no-underline shrink-0 rounded-vp-sm"
-      aria-label={ariaLabel}
+      className={`ds-topbar__brand hg-shared-brand ${onInk ? 'hg-shared-brand--on-ink' : ''} ${size === 'lg' ? 'hg-shared-brand--large' : ''}`}
+      aria-label="heyGo Voice"
       data-testid={testId}
+      title={ariaLabel.includes('heyGo') ? ariaLabel : 'heyGo Voice'}
+      data-edition={edition}
     >
-      <span className="ds-topbar__mark">
-        <VotepitMark />
-      </span>
-      <span
-        className={cx(
-          'ds-topbar__wordmark flex items-baseline gap-[0.22em] font-archivo font-extrabold leading-none tracking-[-0.03em] select-none',
-          size === 'lg' ? 'text-vp-brand-lg' : 'text-vp-brand',
-        )}
-      >
-        <span className="ds-topbar__wordmark-name">
-          {/* On a bar the colours come from --vpds-c-topbar-* (a board may restyle the bar). */}
-          <span className={onInk ? 'ds-topbar__on-bar' : 'text-vp-title'}>Vote</span>
-          <span className={onInk ? 'ds-topbar__pit' : 'text-vp-vote-down'}>pit</span>
-        </span>
-        <span
-          aria-hidden="true"
-          className={cx(
-            'ds-topbar__wordmark-name font-inter font-normal opacity-55 text-[0.85em]',
-            onInk ? 'ds-topbar__on-bar' : 'text-vp-text-muted',
-          )}
-        >
-          │
-        </span>
-        <span
-          className={cx(
-            'text-[0.62em] tracking-[0.08em]',
-            edition === 'cloud'
-              ? onInk
-                ? 'ds-topbar__on-bar'
-                : 'text-vp-cloud-ink'
-              : onInk
-                ? 'ds-topbar__edition-community'
-                : 'text-vp-text-muted',
-          )}
-        >
-          {editionLabel}
-        </span>
-      </span>
+      <img src="/heygo-logo.png" alt="heyGo — Fair rides." />
+      <span>Voice{demo ? ' · Demo' : ''}</span>
     </a>
   )
 }

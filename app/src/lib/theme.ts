@@ -16,14 +16,14 @@ import { useEffect, useSyncExternalStore } from 'react'
 export type ThemePref = 'system' | 'light' | 'dark'
 export type ResolvedTheme = 'light' | 'dark'
 
-const THEME_STORAGE_KEY = 'vp_theme'
+const THEME_STORAGE_KEY = 'heygo_voice_theme'
 /**
  * Board display modes last seen per board page, so the pre-paint script (public/theme-init.js) can apply
  * a board's mode before the first paint. A JSON map from cache key to "light" | "dark"; a board on
  * "System" has no entry. Keys: the board's base path (`/account/board` cloud, `/board` self-host), or
  * `<root>` + the account root for the default board opened at its root URL. See `boardCacheKeys`.
  */
-const BOARD_CACHE_KEY = 'vp_board_theme'
+const BOARD_CACHE_KEY = 'heygo_voice_board_theme'
 const ROOT_PREFIX = '<root>'
 const PREFS: readonly ThemePref[] = ['system', 'light', 'dark']
 
@@ -37,9 +37,9 @@ interface ThemeState {
 function readStoredPref(): ThemePref {
   try {
     const value = window.localStorage.getItem(THEME_STORAGE_KEY)
-    return PREFS.includes(value as ThemePref) ? (value as ThemePref) : 'system'
+    return PREFS.includes(value as ThemePref) ? (value as ThemePref) : 'light'
   } catch {
-    return 'system'
+    return 'light'
   }
 }
 

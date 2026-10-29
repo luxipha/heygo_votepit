@@ -3,7 +3,7 @@ import type de from './discoverPage.de'
 const en = {
   heading: 'Where votes move things',
   subtitle:
-    'Public Votepit boards where real communities vote on real ideas. Browse, cast your vote, and see what people actually want.',
+    'Public heyGo Voice boards where real communities vote on real ideas. Browse, cast your vote, and see what people actually want.',
   loading: 'Loading…',
   errorHeading: 'Failed to load',
   errorLoadFailed: 'We could not load the public boards right now. Please try again.',

@@ -16,7 +16,7 @@ const en = {
   profileLoadRetryCta: 'Try again',
   userIdHint: 'Your user ID: #{id}',
   loggedInHint:
-    "For privacy, Votepit never stores your email address in plain text anywhere (only a one-way hash) — it can't be shown here.",
+    "For privacy, heyGo Voice never stores your email address in plain text anywhere (only a one-way hash) — it can't be shown here.",
 
   // Username (optional public display name)
   usernameHeading: 'Display name',
@@ -169,13 +169,13 @@ const en = {
   backupCodesAckCta: 'Codes saved',
   myDataHeading: 'Your data',
   myDataBody:
-    'Download everything Votepit holds about you — profile, ideas, comments, votes, reactions, notification settings and linked sign-in providers, across all accounts (JSON).',
+    'Download everything heyGo Voice holds about you — profile, ideas, comments, votes, reactions, notification settings and linked sign-in providers, across all accounts (JSON).',
   myDataDownload: 'Download my data',
   myDataDownloading: 'Preparing…',
   myDataDownloadFailed: 'The download failed. Please try again.',
   deleteMeHeading: 'Delete account',
   deleteMeBody:
-    'Permanently deletes your Votepit account after 48 hours. Your ideas and comments stay up as “Deleted user”, your votes keep counting anonymously — all personal data is removed.',
+    'Permanently deletes your heyGo Voice account after 48 hours. Your ideas and comments stay up as “Deleted user”, your votes keep counting anonymously — all personal data is removed.',
   deleteMeButton: 'Delete my account',
   deleteMeOwnerBlocked:
     'You still own an account. Delete it in its account settings first (or contact support to transfer it).',

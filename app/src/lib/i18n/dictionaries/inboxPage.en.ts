@@ -4,7 +4,7 @@ const en = {
   loading: 'Loading…',
   loadError: 'Could not load the inbox.',
   title: 'Inbox',
-  subtitle: 'Replies to your support requests and news from Votepit.',
+  subtitle: 'Replies to your support requests and news from heyGo Voice.',
 
   notificationsHeading: 'Notifications ({count})',
   noNotifications: 'No notifications yet.',

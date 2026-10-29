@@ -220,6 +220,7 @@ final class BoardShell
             return $shellHtml;
         }
 
+        $shellHtml = (string) preg_replace('#<link rel="canonical"[^>]*>\s*#', '', $shellHtml);
         return self::injectHead($shellHtml, [self::NOINDEX]) ?? $shellHtml;
     }
 
@@ -312,15 +313,27 @@ final class BoardShell
         $boardBase  = rtrim($config->appUrl, '/') . $pathPrefix . '/' . $boardSlug;
         $name       = is_string($board['name'] ?? null) && $board['name'] !== '' ? $board['name'] : $boardSlug;
 
+        // The default self-host board and homepage are the same public surface.
+        if (!$cloud && !empty($board['is_default']) && $canonical === $boardBase) {
+            $canonical = rtrim($config->appUrl, '/') . '/';
+        }
+        $description = is_string($board['intro'] ?? null) && trim($board['intro']) !== ''
+            ? trim(strip_tags($board['intro']))
+            : 'Ideas from riders and drivers. A better heyGo for everyone.';
         $head = [];
         if (!$profile) {
-            $head[] = '<meta property="og:site_name" content="Votepit">';
+            $head[] = '<meta property="og:site_name" content="heyGo Voice">';
             $head[] = '<meta property="og:type" content="website">';
             $head[] = '<meta property="og:title" content="' . self::e($name) . '">';
-            $head[] = '<meta property="og:url" content="' . self::e($boardBase) . '">';
+            $head[] = '<meta property="og:url" content="' . self::e($canonical ?? $boardBase) . '">';
             $head[] = '<meta name="twitter:title" content="' . self::e($name) . '">';
         }
 
+        if (!$profile) {
+            $head[] = '<meta name="description" content="' . self::e($description) . '">';
+            $head[] = '<meta property="og:description" content="' . self::e($description) . '">';
+            $head[] = '<meta name="twitter:description" content="' . self::e($description) . '">';
+        }
         $ogId = $variants[BoardAssetProcessor::VARIANT_OG] ?? null;
         if ($ogId !== null) {
             $ogUrl  = $boardBase . '/assets/' . $ogId;
@@ -330,10 +343,21 @@ final class BoardShell
             $head[] = '<meta name="twitter:card" content="summary_large_image">';
             $head[] = '<meta name="twitter:image" content="' . self::e($ogUrl) . '">';
         } elseif (!$profile) {
-            $head[] = '<meta name="twitter:card" content="summary">';
+            $ogUrl = rtrim($config->appUrl, '/') . '/heygo-voice-share-v1.png';
+            $head[] = '<meta property="og:image" content="' . self::e($ogUrl) . '">';
+            $head[] = '<meta property="og:image:width" content="1200">';
+            $head[] = '<meta property="og:image:height" content="630">';
+            $head[] = '<meta property="og:image:alt" content="heyGo Voice — Ideas from riders and drivers.">';
+            $head[] = '<meta name="twitter:card" content="summary_large_image">';
+            $head[] = '<meta name="twitter:image" content="' . self::e($ogUrl) . '">';
         }
 
         $html = $shellHtml;
+        if (!$profile) {
+            // Replace base shell metadata rather than emitting competing tags.
+            $html = (string) preg_replace('#<meta (?:property="og:[^"]+"|name="(?:twitter:[^"]+|description)")[^>]*>\s*#', '', $html);
+            $html = (string) preg_replace('#<link rel="canonical"[^>]*>\s*#', '', $html);
+        }
         // Fallback chain: own favicon > app symbol (logo slot, only while the plan serves logos).
         $symbolId  = $planPolicy->isBrandingFieldAllowed($plan, 'logo_url') ? ($variants[BoardAssetProcessor::VARIANT_LOGO] ?? null) : null;
         $faviconId = $variants[BoardAssetProcessor::VARIANT_FAVICON] ?? $symbolId;
@@ -348,7 +372,8 @@ final class BoardShell
         }
 
         if (!$profile) {
-            $head = array_merge(['<title>' . self::e($name) . ' · Votepit</title>'], $head);
+            $title = $name === 'heyGo Voice' ? $name : $name . ' · heyGo Voice';
+            $head = array_merge(['<title>' . self::e($title) . '</title>'], $head);
             $html = (string) preg_replace('#<title>[^<]*</title>#', '', $html, 1);
         }
         $head[] = $canonical !== null

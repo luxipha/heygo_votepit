@@ -11,14 +11,14 @@
  * line. Nothing else competes with the task on the sheet.
  */
 
-import { LegalFooter, VotepitLogo } from '@votepit/ui'
+import { LegalFooter } from '@votepit/ui'
 import { cx, Spinner } from '@votepit/ui/ds'
 import type { ReactNode } from 'react'
 import { CLOUD_SITE_ORIGIN, type Edition, getEdition } from '../lib/edition'
 import { legalLinksFor } from '../lib/features'
 import { useI18n, useT } from '../lib/i18n/context'
 import { LanguagePicker } from './LanguagePicker'
-import { ThemeChoice } from './ThemeChoice'
+import '../pages/heygo-board.css'
 
 interface AuthShellProps {
   children: ReactNode
@@ -42,29 +42,29 @@ export function AuthShell({ children, footer }: AuthShellProps) {
   const edition = getEdition()
   const homeHref = authHomeHref(edition, language)
   const legalLinks = legalLinksFor(language)
-  const trust = edition === 'cloud' ? t('auth.trustCloud') : t('auth.trustCommunity')
+  const trust = 'heyGo Voice · Ideas, conversations and progress'
 
   return (
-    <div className="min-h-screen vp-desk flex flex-col lg:flex-row">
+    <div
+      data-theme="light"
+      className="hg-voice hg-auth min-h-screen vp-desk flex flex-col lg:flex-row"
+    >
       {/* Forest band — wide screens only, one line of promise and nothing else */}
       <aside
-        aria-label={t('auth.asideAriaLabel')}
+        aria-label="About heyGo Voice"
         className="hidden lg:flex vp-ink-panel w-vp-auth-panel max-w-vp-auth-panel shrink-0 flex-col justify-center p-10 xl:p-14"
       >
         <p className="font-archivo font-extrabold text-[clamp(2.4rem,1.1rem+3.6vw,4.1rem)] leading-[1.02] tracking-[-0.035em] text-balance max-w-[16ch] m-0">
-          {t('auth.tagline')}
+          Your ideas. A better heyGo.
         </p>
       </aside>
 
       <div className="flex-1 min-w-0 flex flex-col">
         <header className="flex justify-center px-4 sm:px-8 h-vp-auth-header">
           <div className="flex w-full max-w-vp-auth-form items-center justify-between gap-3">
-            <VotepitLogo
-              href={homeHref}
-              edition={edition}
-              size="lg"
-              ariaLabel={t('header.logoAriaLabel')}
-            />
+            <a href={homeHref} className="hg-auth-brand" aria-label="heyGo Voice">
+              <img src="/heygo-logo.png" alt="heyGo — Fair rides." />
+            </a>
             <LanguagePicker />
           </div>
         </header>
@@ -93,7 +93,6 @@ export function AuthShell({ children, footer }: AuthShellProps) {
         </main>
 
         <div className="px-4 sm:px-8 pb-6 flex flex-col items-center gap-2">
-          <ThemeChoice />
           <LegalFooter legalLinks={legalLinks} className="justify-center" />
         </div>
       </div>

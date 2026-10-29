@@ -1,7 +1,7 @@
 import type de from './common.de'
 
 const en = {
-  'header.logoAriaLabel': 'Votepit – Home',
+  'header.logoAriaLabel': 'heyGo Voice – Home',
   'header.homeLabel': 'Back to home',
   'header.opensNewTab': 'opens in a new tab',
   'header.navAriaLabel': 'Main navigation',
@@ -50,7 +50,7 @@ const en = {
   'shell.groupPlatform': 'Platform',
   'shell.sessionMenuAriaLabel': 'Session menu',
   'shell.viewSite': 'Open board view',
-  'auth.asideAriaLabel': 'About Votepit',
+  'auth.asideAriaLabel': 'About heyGo Voice',
   'auth.backHomeCloud': 'Back to votepit.com',
   'auth.backHomeCommunity': 'Back to start page',
   'auth.tagline': 'Collect ideas. Let people vote. Decide.',
@@ -66,7 +66,7 @@ const en = {
   'action.delete': 'Delete',
   'action.edit': 'Edit',
   'action.close': 'Close',
-  'starFeedback.ratingTitle': 'How are you enjoying Votepit?',
+  'starFeedback.ratingTitle': 'How are you enjoying heyGo Voice?',
   'starFeedback.good': 'Good',
   'starFeedback.ok': 'Okay',
   'starFeedback.bad': 'Not great',
@@ -82,7 +82,7 @@ const en = {
   'markdownToolbar.italic': 'Italic',
   'markdownToolbar.code': 'Code',
   'markdownToolbar.ariaLabel': 'Formatting',
-  'externalLink.title': 'You are leaving Votepit',
+  'externalLink.title': 'You are leaving heyGo Voice',
   'externalLink.description': 'This link leads to an external site:',
   'externalLink.suspiciousHint':
     'The address contains encoded characters (punycode) — check it carefully before continuing.',

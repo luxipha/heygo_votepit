@@ -2,8 +2,8 @@ import type de from './loginPage.de'
 
 const en = {
   backToBoard: 'Back to board',
-  heading: 'Log in',
-  subtitle: "We'll send you a magic link by email.",
+  heading: 'Sign in to heyGo Voice',
+  subtitle: 'Get an email sign-in link to share ideas, vote and join the discussion.',
   inviteNoticeTitle: 'Accept invitation',
   inviteNoticeBody:
     "Sign in with the email address that was invited. The invitation is then accepted automatically – you don't need a password, the magic link is enough. You don't need to create an account of your own.",

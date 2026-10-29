@@ -58,3 +58,8 @@ dist/
 
 # Doc-Gate: lokale, projektspezifische Internas-Blockliste (nie committen)
 /.githooks/leak-blocklist.local
+
+# Private HeyGo environment and deployment records
+/HEYGO_DEPLOYMENT.md
+/HEYGO_LOCAL.md
+/design-qa.md

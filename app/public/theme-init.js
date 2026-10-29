@@ -13,7 +13,7 @@
         : segments.length === 1
           ? ['<root>' + pathname, '/' + segments[0]]
           : ['/' + segments[0] + '/' + segments[1], '/' + segments[0]];
-    var cache = JSON.parse(window.localStorage.getItem('vp_board_theme') || 'null') || {};
+    var cache = JSON.parse(window.localStorage.getItem('heygo_voice_board_theme') || 'null') || {};
     for (var i = 0; i < keys.length && mode === null; i++) {
       var value = cache[keys[i]];
       if (value === 'light' || value === 'dark') mode = value;
@@ -23,10 +23,12 @@
   }
   if (mode === null) {
     try {
-      var saved = window.localStorage.getItem('vp_theme');
+      var saved = window.localStorage.getItem('heygo_voice_theme');
       if (saved === 'light' || saved === 'dark') mode = saved;
+      else if (saved !== 'system') mode = 'light';
     } catch (e) {
-      // Storage blocked (private window, cleared site data): the system setting applies.
+      // Storage blocked: use the HeyGo light default.
+      mode = 'light';
     }
   }
   if (mode !== null) document.documentElement.setAttribute('data-theme', mode);

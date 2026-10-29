@@ -1,0 +1,36 @@
+/* HeyGo skin for every retained route and shared DS component. */
+:root,[data-theme="light"] {
+  --vpds-p-color-neutral-porcelain:#f8faf4;
+  --vpds-p-color-neutral-porcelain-deep:#eef3ec;
+  --vpds-p-color-neutral-ink:#0f172a;
+  --vpds-p-color-neutral-muted:#64748b;
+  --vpds-p-color-neutral-line:#e7e9e3;
+  --vpds-p-color-brand-forest:#064e3b;
+  --vpds-p-color-brand-forest-deep:#043c2e;
+  --vpds-p-color-brand-emerald:#059669;
+  --vpds-p-color-brand-mint:#38d878;
+  --vpds-p-color-brand-accent:#064e3b;
+  --vpds-p-color-brand-accent-strong:#047857;
+  --vpds-action-primary-background:#064e3b;
+  --vpds-action-primary-background-hover:#047857;
+  --vpds-action-primary-foreground:#fff;
+  --vpds-action-accent-foreground:#fff;
+  --vpds-action-secondary-border:#cbd5e1;
+  --vpds-border-control:#94a3b8;
+  --vpds-text-link:#047857;
+  --vp-primary:#059669;
+  --vpds-p-font-family-archivo:Inter,system-ui,sans-serif;
+}
+[data-theme="dark"]{--vpds-p-color-brand-forest:#064e3b;--vpds-p-color-brand-mint:#38d878;--vpds-action-accent-background:#38d878;--vpds-action-accent-background-hover:#6ee7a0;--vpds-action-accent-foreground:#043c2e}
+.hg-shared-brand{display:inline-flex;align-items:center;gap:16px;text-decoration:none;flex-shrink:0;border-radius:10px;padding:6px 12px;background:#064e3b;color:#fff;max-width:100%}.hg-shared-brand img{display:block;width:112px;height:44px;object-fit:contain}.hg-shared-brand>span{font-family:Inter,Arial,sans-serif;font-size:12px;font-weight:600;letter-spacing:.07em;border-left:1px solid #ffffff40;padding-left:16px;white-space:nowrap}.hg-shared-brand--on-ink{padding-left:0}.hg-shared-brand--large img{width:145px;height:56px}
+.vp-sheet,.vp-card{border-radius:16px;overflow-wrap:anywhere}.vp-sheet--ruled{border-top-width:1px}.vp-nav-item{border-radius:10px;min-height:44px}.vp-nav-item[aria-current="page"],.vp-nav-item[data-current="true"]{background:#dff6e9;color:#064e3b;box-shadow:inset 3px 0 #059669}.vp-nav-item:hover{background:#ecfdf5;color:#064e3b}.vp-desk input,.vp-desk textarea,.vp-desk select{border-radius:10px}.vp-desk h1{letter-spacing:-.035em}.ds-topbar{background:#064e3b}.ds-sheet__panel{border-radius:20px}.ds-sheet{z-index:60}.vp-desk{font-family:Inter,Arial,sans-serif}
+@media(max-width:760px){.hg-shared-brand{gap:10px;padding:4px 8px}.hg-shared-brand img{width:100px;height:40px}.hg-shared-brand>span{font-size:10px;padding-left:10px}.vp-desk input,.vp-desk textarea,.vp-desk select{font-size:16px}.vp-desk h1{overflow-wrap:anywhere}.vp-sheet,.vp-card{min-width:0}}
+
+:root{--font-archivo:Inter,system-ui,sans-serif;--radius-vp-lg:16px}
+
+.hg-managed-mobile-header{display:none}
+@media(max-width:760px){.hg-managed-mobile-header{display:block}.hg-managed-desktop-header{display:none}.hg-managed-shell{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}.hg-managed-shell .hg-topbar>nav{right:0;width:100%}.hg-managed-shell [data-testid="app-shell-sidebar-open"]{position:absolute;z-index:22;top:12px;right:18px;width:44px;height:44px;padding:10px;border:1px solid #ffffff50;border-radius:10px;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0}.hg-managed-shell main>div:has(>[data-testid="app-shell-sidebar-open"]){margin:0}.hg-managed-shell .hg-topbar{font-family:Inter,Arial,sans-serif}.hg-managed-shell .hg-brand img{width:115px;height:44px}.hg-managed-shell{position:relative}.hg-managed-shell .hg-account{font-size:12px;margin-right:56px}.hg-managed-shell .hg-account a{color:#fff}.hg-managed-shell [data-testid="app-shell-sidebar-open"] svg{width:21px;height:21px}}
+
+/* The shared mobile header also mounts outside the public board's .hg-voice root. */
+.hg-managed-shell{--hg-bg:#f8faf4;--hg-ink:#0f172a;--hg-muted:#64748b;--hg-green:#064e3b;--hg-bright:#38d878;--hg-line:#e7e9e3}
+@media(max-width:760px){.hg-managed-shell .hg-topbar{background:#064e3b;color:#fff}.hg-managed-shell .hg-topbar>nav{background:#fff;color:#64748b}.hg-managed-shell .hg-topbar>nav a{color:#64748b}.hg-managed-shell .hg-topbar>nav a[aria-current="page"]{color:#064e3b}}

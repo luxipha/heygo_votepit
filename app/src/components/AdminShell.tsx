@@ -46,15 +46,23 @@ import {
 } from 'lucide-react'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import { forwardRef, useEffect, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useParams } from 'react-router-dom'
 import { accountPath, getAccountSlug, getRoutingMode } from '../lib/accountContext'
-import { accountRoleFor, getWorklistSummary, type User, WORKLIST_CHANGED_EVENT } from '../lib/api'
+import {
+  accountRoleFor,
+  getDefaultBoardSlug,
+  getWorklistSummary,
+  type User,
+  WORKLIST_CHANGED_EVENT,
+} from '../lib/api'
 import { legalLinksFor } from '../lib/features'
 import { pickLanguage, useI18n, useT } from '../lib/i18n/context'
 import { Avatar } from './Avatar'
+import { HeyGoHeader } from './HeyGoHeader'
 import { accountAreaHref, LocalizedHeader, landingMenuItem, ScopeLabel } from './LocalizedHeader'
 import { OperatorBadge, RoleBadge } from './RoleBadge'
 import { StarFeedbackPrompt } from './StarFeedbackPrompt'
+import '../pages/heygo-board.css'
 
 interface AdminShellProps {
   user: User | null
@@ -116,6 +124,22 @@ export function AdminShell({
   const { language } = useI18n()
   const pathname = typeof window !== 'undefined' ? window.location.pathname : ''
   const accountSlug = getAccountSlug()
+  const { boardSlug } = useParams<{ boardSlug: string }>()
+  const [defaultSlug, setDefaultSlug] = useState('')
+  useEffect(() => {
+    // The API reads account context implicitly; refetch when that context changes.
+    void accountSlug
+    let current = true
+    setDefaultSlug('')
+    getDefaultBoardSlug()
+      .then((value) => {
+        if (current) setDefaultSlug(value.slug)
+      })
+      .catch(() => {})
+    return () => {
+      current = false
+    }
+  }, [accountSlug])
   const role = accountRoleFor(user, accountSlug)
   const canModerate = user !== null && (user.is_admin || role === 'owner' || role === 'admin')
 
@@ -295,23 +319,35 @@ export function AdminShell({
     groups.push({ label: t('shell.groupPlatform'), items: mark(platformItems) })
 
   const header = (
-    <LocalizedHeader
-      logoHref={logoHref ?? accountPath('/')}
-      navLinks={[]}
-      isAuthenticated={isAuthenticated}
-      authPending={authPending}
-      user={user}
-      onLogoutClick={onLogout}
-      onLoginClick={onLogin}
-      compactAccountMenu
-      scope={
-        <ScopeLabel
-          section={
-            scope ?? (area === 'operator' ? t('header.scopeOperator') : t('header.scopeAdmin'))
+    <>
+      <div className="hg-managed-mobile-header">
+        <HeyGoHeader
+          slug={boardSlug || defaultSlug}
+          active="none"
+          user={user}
+          ready={!authPending}
+        />
+      </div>
+      <div className="hg-managed-desktop-header">
+        <LocalizedHeader
+          logoHref={logoHref ?? accountPath('/')}
+          navLinks={[]}
+          isAuthenticated={isAuthenticated}
+          authPending={authPending}
+          user={user}
+          onLogoutClick={onLogout}
+          onLoginClick={onLogin}
+          compactAccountMenu
+          scope={
+            <ScopeLabel
+              section={
+                scope ?? (area === 'operator' ? t('header.scopeOperator') : t('header.scopeAdmin'))
+              }
+            />
           }
         />
-      }
-    />
+      </div>
+    </>
   )
 
   const profileHref = accountAreaHref(user, '/profile')
@@ -365,20 +401,22 @@ export function AdminShell({
   ) : undefined
 
   return (
-    <AppShell
-      header={header}
-      sidebar={<SidebarNav groups={groups} ariaLabel={t('shell.sidebarAriaLabel')} />}
-      sidebarFooter={sidebarFooter}
-      sidebarAriaLabel={t('shell.sidebarAriaLabel')}
-      openSidebarLabel={t('shell.openSidebar')}
-      closeSidebarLabel={t('shell.closeSidebar')}
-      legalLinks={legalLinksFor(language)}
-      width={width}
-    >
-      {/* Account-admin only (owner/admin/moderator) — never shown to
+    <div className="hg-managed-shell">
+      <AppShell
+        header={header}
+        sidebar={<SidebarNav groups={groups} ariaLabel={t('shell.sidebarAriaLabel')} />}
+        sidebarFooter={sidebarFooter}
+        sidebarAriaLabel={t('shell.sidebarAriaLabel')}
+        openSidebarLabel={t('shell.openSidebar')}
+        closeSidebarLabel={t('shell.closeSidebar')}
+        legalLinks={legalLinksFor(language)}
+        width={width}
+      >
+        {/* Account-admin only (owner/admin/moderator) — never shown to
           anonymous voters or in the platform-operator area. */}
-      {canModerate && area === 'account' && <StarFeedbackPrompt />}
-      {children}
-    </AppShell>
+        {canModerate && area === 'account' && <StarFeedbackPrompt />}
+        {children}
+      </AppShell>
+    </div>
   )
 }

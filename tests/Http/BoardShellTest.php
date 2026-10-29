@@ -65,7 +65,7 @@ final class BoardShellTest extends IntegrationTestCase
         self::assertStringContainsString('<link rel="icon" type="image/png" sizes="64x64" href="http://localhost:8000/demo/assets/' . $fav . '">', $html);
         self::assertStringNotContainsString('href="/favicon.svg"', $html, 'the board favicon replaces the static icons');
         self::assertSame(1, substr_count($html, '<title>'));
-        self::assertStringContainsString('<title>Demo Board · Votepit</title>', $html);
+        self::assertStringContainsString('<title>Demo Board · heyGo Voice</title>', $html);
     }
 
     public function test_idea_submit_impressum_and_edit_paths_get_the_board_icon(): void
@@ -104,7 +104,7 @@ final class BoardShellTest extends IntegrationTestCase
         self::assertStringContainsString('content="&lt;/title&gt;&lt;script&gt;alert(1)&lt;/script&gt; &quot;Q&quot; &amp; co"', $html);
     }
 
-    public function test_gate_off_plan_gets_no_image_tags_but_keeps_title(): void
+    public function test_gate_off_plan_gets_site_image_without_exposing_board_assets(): void
     {
         $boardId = $this->seedPublicBoard();
         $this->setAccountPlan($this->defaultAccountId(), 'lite');
@@ -113,12 +113,12 @@ final class BoardShellTest extends IntegrationTestCase
 
         $html = (string) $this->render('/demo');
 
-        self::assertStringNotContainsString('og:image', $html);
-        self::assertStringNotContainsString('twitter:image', $html);
+        self::assertStringContainsString('heygo-voice-share-v1.png', $html);
+        self::assertStringContainsString('name="twitter:image"', $html);
         self::assertStringNotContainsString('sizes="64x64"', $html);
         self::assertStringContainsString('href="/favicon.svg"', $html);
-        self::assertStringContainsString('<meta name="twitter:card" content="summary">', $html);
-        self::assertStringContainsString('<title>Demo Board · Votepit</title>', $html);
+        self::assertStringContainsString('<meta name="twitter:card" content="summary_large_image">', $html);
+        self::assertStringContainsString('<title>Demo Board · heyGo Voice</title>', $html);
     }
 
     public function test_private_board_gets_the_plain_shell(): void
@@ -150,14 +150,15 @@ final class BoardShellTest extends IntegrationTestCase
         }
     }
 
-    public function test_public_board_pages_are_their_own_canonical(): void
+    public function test_default_board_alias_uses_root_and_subpages_keep_their_canonical(): void
     {
         $boardId = $this->seedPublicBoard();
         $ideaId  = $this->seedIdea($boardId, $this->insertUser());
 
         foreach (['/demo', '/demo/roadmap', '/demo/impressum', '/demo/idea/' . $ideaId] as $path) {
             $html = (string) $this->render($path);
-            self::assertStringContainsString('<link rel="canonical" href="http://localhost:8000' . $path . '">', $html, $path);
+            $expectedPath = $path === '/demo' ? '/' : $path;
+            self::assertStringContainsString('<link rel="canonical" href="http://localhost:8000' . $expectedPath . '">', $html, $path);
             self::assertStringNotContainsString('noindex', $html, $path);
         }
     }
@@ -171,7 +172,7 @@ final class BoardShellTest extends IntegrationTestCase
 
         foreach (['/demo/idea/999999', '/demo/idea/' . $deleted, '/demo/idea/' . $foreign] as $path) {
             $html = (string) $this->render($path);
-            self::assertStringContainsString('<title>Demo Board · Votepit</title>', $html, $path);
+            self::assertStringContainsString('<title>Demo Board · heyGo Voice</title>', $html, $path);
             self::assertStringContainsString('<meta name="robots" content="noindex">', $html, $path);
             self::assertStringNotContainsString('rel="canonical"', $html, $path);
         }
@@ -278,7 +279,7 @@ final class BoardShellTest extends IntegrationTestCase
 
         $response = $this->respond('/faq');
         self::assertSame(200, $response->status);
-        self::assertStringContainsString('<link rel="canonical" href="http://localhost:8000/faq">', $response->html);
+        self::assertStringContainsString('<link rel="canonical" href="http://localhost:8000/">', $response->html);
     }
 
     public function test_system_route_without_an_account_or_board_of_that_slug_answers_200_noindex(): void
@@ -410,7 +411,7 @@ final class BoardShellTest extends IntegrationTestCase
         $html = BoardShell::render(self::SHELL, '/demo', $this->testConfig(), $this->conn, new UnrestrictedPlanPolicy());
 
         self::assertIsString($html);
-        self::assertStringContainsString('<title>Demo Board · Votepit</title>', $html);
+        self::assertStringContainsString('<title>Demo Board · heyGo Voice</title>', $html);
     }
 
     // -------------------------------------------------------------------------
@@ -538,4 +539,26 @@ final class BoardShellTest extends IntegrationTestCase
         self::assertStringContainsString('href="http://localhost:8000/' . $ownSlug . '/demo/assets/' . $fav . '"', $html);
         self::assertNull($this->renderProfile('/no-such-account/members/7/profile', 'demo', $this->cloudConfig()));
     }
+    public function test_default_board_shares_homepage_canonical_and_fallback_image(): void
+    {
+        $id = $this->seedPublicBoard('heyGo Voice');
+        $this->conn->update('boards', ['is_default' => 1], ['id' => $id]);
+        $html = (string) $this->render('/demo');
+        self::assertStringContainsString('<title>heyGo Voice</title>', $html);
+        self::assertStringContainsString('<link rel="canonical" href="http://localhost:8000/">', $html);
+        self::assertStringContainsString('content="http://localhost:8000/heygo-voice-share-v1.png"', $html);
+    }
+
+    public function test_dynamic_board_meta_replaces_static_share_tags(): void
+    {
+        $id = $this->seedPublicBoard('Community ideas');
+        $this->conn->update('boards', ['intro' => 'Riders & drivers'], ['id' => $id]);
+        $shell = (string) file_get_contents(dirname(__DIR__, 2) . '/app/index.html');
+        $html = (string) BoardShell::render($shell, '/demo', $this->testConfig(), $this->conn, self::syntheticPlanPolicy());
+        self::assertSame(1, substr_count($html, 'property="og:title"'));
+        self::assertSame(1, substr_count($html, 'rel="canonical"'));
+        self::assertStringContainsString('content="Riders &amp; drivers"', $html);
+        self::assertStringContainsString('<title>Community ideas · heyGo Voice</title>', $html);
+    }
+
 }

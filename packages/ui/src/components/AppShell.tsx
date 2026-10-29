@@ -242,6 +242,7 @@ export function AppShell({
                 ref={toggleRef}
                 variant="secondary"
                 testId="app-shell-sidebar-open"
+                aria-label={openSidebarLabel}
                 aria-expanded={open}
                 aria-controls={open ? drawerId : undefined}
                 onClick={() => setOpen(true)}

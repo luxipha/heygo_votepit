@@ -64,9 +64,11 @@ export default defineConfig({
     // dev server can't load board data (fetch('/feedback') would hit Vite instead).
     proxy: {
       '^/': {
-        target: 'http://localhost:8080',
+        target: process.env.VOTEPIT_DEV_API_URL || 'http://localhost:8080',
         changeOrigin: true,
         bypass(req) {
+          // HeyGo branding is owned by Vite's public directory, not the PHP API.
+          if (/^\/heygo-(logo|icon(?:-512)?)\.png(?:\?|$)/.test(req.url || '')) return req.url
           const accept = req.headers.accept || ''
           // JSON and image requests (board logo/cover assets) go to PHP; pages stay on Vite.
           // Page navigations also list image/* in Accept, so images must not accept text/html.

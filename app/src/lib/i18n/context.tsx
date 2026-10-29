@@ -28,9 +28,9 @@ export const LANGUAGE_NAMES: Record<Language, string> = {
   it: 'Italiano',
 }
 
-const STORAGE_KEY = 'vp_lang'
+const STORAGE_KEY = 'heygo_voice_language'
 /** Used outside the provider (unit tests) — the app's historical default. */
-const DEFAULT_LANGUAGE: Language = 'de'
+const DEFAULT_LANGUAGE: Language = 'en'
 /** Detection result when no browser language is supported, and the missing-key fallback. */
 const FALLBACK_LANGUAGE: Language = 'en'
 
@@ -124,7 +124,8 @@ function detectBrowserLanguage(): Language | null {
 }
 
 function detectInitialLanguage(): Language {
-  return readStoredLanguage() ?? detectBrowserLanguage() ?? FALLBACK_LANGUAGE
+  const browser = detectBrowserLanguage()
+  return readStoredLanguage() ?? (browser === 'en' ? browser : FALLBACK_LANGUAGE)
 }
 
 interface I18nContextValue {

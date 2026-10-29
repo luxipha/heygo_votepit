@@ -19,7 +19,6 @@ import {
   useT,
 } from '../lib/i18n/context'
 import commonEs from '../lib/i18n/dictionaries/common.es'
-import commonFr from '../lib/i18n/dictionaries/common.fr'
 
 function Probe() {
   const { language } = useI18n()
@@ -55,7 +54,7 @@ afterEach(() => {
 
 describe('initial language detection', () => {
   it('prefers a stored choice over the browser languages', () => {
-    localStorage.setItem('vp_lang', 'de')
+    localStorage.setItem('heygo_voice_language', 'de')
     mockBrowserLanguages(['fr-FR', 'fr'])
     renderApp()
     expect(screen.getByTestId('probe')).toHaveAttribute('data-language', 'de')
@@ -63,20 +62,18 @@ describe('initial language detection', () => {
   })
 
   it('ignores an unknown stored value', () => {
-    localStorage.setItem('vp_lang', 'xx')
+    localStorage.setItem('heygo_voice_language', 'xx')
     mockBrowserLanguages(['de-AT'])
     renderApp()
-    expect(screen.getByTestId('probe')).toHaveAttribute('data-language', 'de')
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-language', 'en')
   })
 
-  it('picks the first supported browser language by primary subtag and loads it lazily', async () => {
+  it('defaults to English regardless of the browser language', async () => {
     mockBrowserLanguages(['pl-PL', 'fr-CA', 'en'])
     renderApp()
-    expect(screen.getByTestId('probe')).toHaveAttribute('data-language', 'fr')
-    await waitFor(() =>
-      expect(screen.getByTestId('probe')).toHaveTextContent(commonFr['language.label']),
-    )
-    expect(document.documentElement.lang).toBe('fr')
+    expect(screen.getByTestId('probe')).toHaveAttribute('data-language', 'en')
+    await waitFor(() => expect(screen.getByTestId('probe')).toHaveTextContent('Language'))
+    expect(document.documentElement.lang).toBe('en')
   })
 
   it('falls back to English when no browser language is supported', () => {
@@ -89,7 +86,7 @@ describe('initial language detection', () => {
 
 describe('LanguagePicker', () => {
   it('lists all six languages by their own names and switches + persists the choice', async () => {
-    localStorage.setItem('vp_lang', 'de')
+    localStorage.setItem('heygo_voice_language', 'de')
     renderApp()
 
     await userEvent.click(screen.getByRole('button', { name: /Sprache/ }))
@@ -112,7 +109,7 @@ describe('LanguagePicker', () => {
     await waitFor(() =>
       expect(screen.getByTestId('probe')).toHaveTextContent(commonEs['language.label']),
     )
-    expect(localStorage.getItem('vp_lang')).toBe('es')
+    expect(localStorage.getItem('heygo_voice_language')).toBe('es')
     expect(document.documentElement.lang).toBe('es')
   })
 })

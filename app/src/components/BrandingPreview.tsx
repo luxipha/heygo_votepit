@@ -15,7 +15,6 @@
  * the matching setting. The keyboard path is the builder's area list.
  */
 
-import { VotepitMark } from '@votepit/ui'
 import {
   accessibleFill,
   Badge,
@@ -504,7 +503,7 @@ function BrandingPreviewBody({
           ) : (
             <>
               <span className="ds-topbar__mark">
-                <VotepitMark />
+                <img src="/heygo-icon.png" alt="" className="size-6 object-contain" />
               </span>
               <span className="ds-topbar__on-bar min-w-0 truncate font-archivo text-vp-sm font-extrabold">
                 {displayName}
@@ -1063,11 +1062,11 @@ export function BrowserTabMock({
             className="size-4 object-contain"
           />
         ) : (
-          <VotepitMark />
+          <img src="/heygo-icon.png" alt="" className="size-6 object-contain" />
         )}
       </span>
       <span className="min-w-0 truncate" data-testid="branding-preview-tab-title">
-        {`${displayName} · Votepit`}
+        {`${displayName} · heyGo Voice`}
       </span>
     </div>
   )

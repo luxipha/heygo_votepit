@@ -35,22 +35,25 @@ function storage(entries: Record<string, string | null>): Storage {
 describe('public/theme-init.js (pre-paint scheme)', () => {
   it('applies a cached board mode over the viewer choice on a cloud board page', () => {
     const s = storage({
-      vp_board_theme: JSON.stringify({ '/acc/board': 'dark' }),
-      vp_theme: 'light',
+      heygo_voice_board_theme: JSON.stringify({ '/acc/board': 'dark' }),
+      heygo_voice_theme: 'light',
     })
     expect(preparedTheme('/acc/board/idea/3', s)).toBe('dark')
     expect(preparedTheme('/acc/board', s)).toBe('dark')
   })
 
   it('applies a cached board mode on a self-hosted board subpage', () => {
-    const s = storage({ vp_board_theme: JSON.stringify({ '/board': 'light' }), vp_theme: 'dark' })
+    const s = storage({
+      heygo_voice_board_theme: JSON.stringify({ '/board': 'light' }),
+      heygo_voice_theme: 'dark',
+    })
     expect(preparedTheme('/board/roadmap', s)).toBe('light')
   })
 
   it('applies the root entry of the default board at its root URL only', () => {
     const s = storage({
-      vp_board_theme: JSON.stringify({ '<root>/acc': 'light' }),
-      vp_theme: 'dark',
+      heygo_voice_board_theme: JSON.stringify({ '<root>/acc': 'light' }),
+      heygo_voice_theme: 'dark',
     })
     expect(preparedTheme('/acc', s)).toBe('light')
     // Admin pages of the same account must not inherit the default board's mode.
@@ -58,29 +61,38 @@ describe('public/theme-init.js (pre-paint scheme)', () => {
   })
 
   it('falls back to the viewer choice when the board has no entry or chose System', () => {
-    const s = storage({ vp_board_theme: JSON.stringify({ '/other': 'dark' }), vp_theme: 'light' })
+    const s = storage({
+      heygo_voice_board_theme: JSON.stringify({ '/other': 'dark' }),
+      heygo_voice_theme: 'light',
+    })
     expect(preparedTheme('/acc/board', s)).toBe('light')
-    expect(preparedTheme('/acc/board', storage({ vp_theme: 'system' }))).toBeUndefined()
+    expect(preparedTheme('/acc/board', storage({ heygo_voice_theme: 'system' }))).toBeUndefined()
   })
 
-  it('sets nothing for System everywhere (the DS media query decides)', () => {
-    expect(preparedTheme('/acc/board', storage({}))).toBeUndefined()
+  it('uses light by default without a HeyGo preference', () => {
+    expect(preparedTheme('/acc/board', storage({}))).toBe('light')
   })
 
   it('survives blocked storage and corrupt cache entries', () => {
-    expect(preparedTheme('/acc/board', null)).toBeUndefined()
-    expect(
-      preparedTheme('/acc/board', storage({ vp_board_theme: '{not json', vp_theme: 'dark' })),
-    ).toBe('dark')
-    expect(preparedTheme('/acc/board', storage({ vp_board_theme: '[]', vp_theme: 'dark' }))).toBe(
-      'dark',
-    )
+    expect(preparedTheme('/acc/board', null)).toBe('light')
     expect(
       preparedTheme(
         '/acc/board',
-        storage({ vp_board_theme: JSON.stringify({ '/acc/board': 'plum' }) }),
+        storage({ heygo_voice_board_theme: '{not json', heygo_voice_theme: 'dark' }),
       ),
-    ).toBeUndefined()
+    ).toBe('dark')
+    expect(
+      preparedTheme(
+        '/acc/board',
+        storage({ heygo_voice_board_theme: '[]', heygo_voice_theme: 'dark' }),
+      ),
+    ).toBe('dark')
+    expect(
+      preparedTheme(
+        '/acc/board',
+        storage({ heygo_voice_board_theme: JSON.stringify({ '/acc/board': 'plum' }) }),
+      ),
+    ).toBe('light')
   })
 })
 
